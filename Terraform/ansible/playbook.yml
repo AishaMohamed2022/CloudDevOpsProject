@@ -1,0 +1,8 @@
+---
+- name: Configure CI Runner Instance
+  hosts: role_runner
+  become: true
+  roles:
+    - common
+    - docker
+    - trivy
