@@ -1,6 +1,4 @@
-# CloudDevOpsProject
-# Cloud-Native GitOps Microservices Architectur
-
+# Cloud DevOps Project: Cloud-Native GitOps Microservices Architecture
 ---
 
 ## 📌 Project Overview
@@ -9,6 +7,7 @@ This repository contains an end-to-end cloud-native microservices web applicatio
 
 The project demonstrates modern DevOps engineering practices:
 - **Containerization**: Multi-container Docker environments and multi-stage builds.
+- **Configuration Management (Ansible)**: Declarative automation with Ansible Roles and AWS Dynamic Inventory.
 - **Orchestration**: Fully declarative Kubernetes manifests with persistent storage, decoupled configurations, and service discovery.
 - **Continuous Integration (CI)**: Automated GitHub Actions pipeline using Reusable Workflows and Trivy security scanning.
 - **Continuous Deployment (CD)**: Automated GitOps synchronization via **ArgoCD**.
@@ -82,6 +81,11 @@ CloudDevOpsProject/
 │       ├── ci-frontend.yml           # CI trigger for Frontend Service
 │       ├── ci-auth.yml               # CI trigger for Auth Service
 │       └── ci-roadmap.yml            # CI trigger for Roadmap Service
+├── ansible/
+│   ├── inventory_aws_ec2.yml         # AWS EC2 Dynamic Inventory configuration
+│   ├── playbook.yml                  # Playbook mapping hosts to configuration roles
+│   ├── roles/                        # Modular roles (common, docker, trivy, runner)
+│   └── README.md                     # Dedicated Ansible documentation (Task 4)
 ├── argocd/
 │   └── application.yaml              # ArgoCD GitOps Application CRD definition
 ├── auth-service/                     # Python Flask Authentication API & Dockerfile
@@ -103,29 +107,46 @@ CloudDevOpsProject/
 
 ---
 
-## 🧩 Microservices Specification
+## 🧩 Tasks Deliverables Matrix
 
-| Service | Technology Stack | Port | Purpose |
-| :--- | :--- | :---: | :--- |
-| **Frontend** | Node.js (Express & EJS) | `3000` | Web UI, handles sessions, calls backend APIs |
-| **Auth Service** | Python 3.12 (Flask) | `5000` | User registration & authentication with bcrypt |
-| **Roadmap Service** | Java 21 (Spring Boot) | `8080` | Provides DevOps roadmap content API |
-| **Database** | MySQL 8.0 | `3306` | Relational storage for user accounts |
+| Task # | Task Description | Implemented Technology | Status |
+| :---: | :--- | :--- | :---: |
+| **Task 1** | GitHub Repository Setup | Git, GitHub (`CloudDevOpsProject`) | **Completed** ✅ |
+| **Task 2** | Containerization with Docker | Docker, Docker Compose, Multi-stage builds | **Completed** ✅ |
+| **Task 4** | Configuration Management | Ansible Roles & AWS Dynamic Inventory | **Completed** ✅ |
+| **Task 5** | Container Orchestration | Kubernetes (StatefulSet, Headless Svc, Ingress) | **Completed** ✅ |
+| **Task 6** | Continuous Integration | GitHub Actions Reusable Pipeline & Trivy Scan | **Completed** ✅ |
+| **Task 7** | Continuous Deployment | ArgoCD GitOps Operator (Auto-Sync & Self-Heal) | **Completed** ✅ |
+| **Task 8** | Comprehensive Documentation | Markdown, Architecture Diagrams & Setup Guides | **Completed** ✅ |
 
 ---
 
 ## 🚀 Quickstart & Setup Guide
 
-### 1. Local Testing with Docker Compose
-To run and test the complete stack locally using Docker Compose:
+### 1. Local Testing with Docker Compose (Task 2)
 ```bash
+# Build and run all microservices locally
 docker compose up --build -d
+
+# Access Frontend Web UI
+http://localhost:3001
 ```
-Access the application at: `http://localhost:3001` (or `http://localhost:3000`).
 
 ---
 
-### 2. Kubernetes Deployment
+### 2. Configuration Management with Ansible (Task 4)
+The `ansible/` directory automates the setup of runner/server dependencies:
+```bash
+# Verify AWS EC2 Dynamic Inventory discovery
+ansible-inventory -i ansible/inventory_aws_ec2.yml --graph
+
+# Execute configuration playbook
+ansible-playbook -i ansible/inventory_aws_ec2.yml ansible/playbook.yml
+```
+
+---
+
+### 3. Kubernetes Deployment (Task 5)
 Deploy the full architecture to the local Kubernetes cluster:
 ```bash
 # Apply all manifests to the cluster
@@ -135,16 +156,7 @@ kubectl apply -f kubernetes/
 kubectl get pods -n ivolve
 ```
 
-Expected output:
-```text
-NAME                               READY   STATUS    RESTARTS   AGE
-auth-service-7d8674bcc7-xxxxx      1/1     Running   0          1m
-frontend-764fd84795-xxxxx          1/1     Running   0          1m
-mysql-0                            1/1     Running   0          1m
-roadmap-service-6744b7fc44-xxxxx   1/1     Running   0          1m
-```
-
-Access the frontend via port-forwarding:
+Forward port to access frontend:
 ```bash
 kubectl port-forward svc/frontend -n ivolve 3001:3000
 ```
@@ -152,7 +164,7 @@ Open **`http://localhost:3001`** in your browser.
 
 ---
 
-### 3. Continuous Deployment with ArgoCD (GitOps)
+### 4. Continuous Deployment with ArgoCD (Task 7)
 ArgoCD monitors this repository and ensures automated synchronization:
 ```bash
 # Forward ArgoCD web server port
