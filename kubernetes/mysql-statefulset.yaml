@@ -62,7 +62,7 @@ spec:
         name: mysql-data
       spec:
         accessModes: [ "ReadWriteOnce" ]
-        storageClassName: ivolve-storageclass
+        storageClassName: hostpath
         resources:
           requests:
             storage: 1Gi
