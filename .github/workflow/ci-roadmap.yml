@@ -1,0 +1,18 @@
+name: CI Roadmap Service
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "roadmap-service/**"
+
+jobs:
+  trigger-shared-ci:
+    uses: ./.github/workflows/reusable-ci.yml
+    with:
+      service_name: "roadmap-service"
+      context_dir: "roadmap-service"
+      manifest_file: "kubernetes/06-roadmap-service.yaml"
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
